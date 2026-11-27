@@ -1,4 +1,4 @@
-const CACHE_VERSION = "bomba-v3";
+const CACHE_VERSION = "bomba-v4";
 const APP_SHELL = [
   "./",
   "./styles.css",
@@ -9,6 +9,7 @@ const APP_SHELL = [
   "./assets/icon.svg",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
+  "./assets/apple-touch-icon.png",
 ];
 
 self.addEventListener("install", (event) => {

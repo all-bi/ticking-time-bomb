@@ -8,23 +8,22 @@
   <meta name="description" content="Offline PWA pro dětskou táborovou hru s časovanou bombou.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
   <link rel="stylesheet" href="./styles.css">
   <title>Bomba</title>
 </head>
 <body>
   <main class="app">
     <header class="app-header">
-      <svg class="logo" viewBox="0 0 128 128" aria-hidden="true">
-        <circle cx="60" cy="76" r="34"></circle>
-        <path d="M76 44l10-10"></path>
-        <path d="M92 28c6-6 14-6 20 0"></path>
+      <svg class="logo" viewBox="80 120 360 320" aria-hidden="true">
+        <path d="M286 222C304 176 338 154 382 160"></path>
+        <circle cx="232" cy="300" r="112"></circle>
+        <circle class="spark" cx="398" cy="162" r="20"></circle>
       </svg>
       <h1>Bomba</h1>
     </header>
 
     <section id="statusCard" class="card status" data-state="ready" aria-live="polite" aria-atomic="true">
-      <p class="status-label">Stav hry</p>
       <p id="statusText" class="status-text">Připraveno</p>
       <p id="countdownText" class="countdown" hidden>Zbývá 0,0 s</p>
       <p id="errorText" class="error-text" hidden></p>
@@ -32,8 +31,8 @@
 
     <section class="actions" aria-label="Ovládání hry">
       <button id="startButton" class="button button-primary" type="button">START</button>
-      <button id="manualExplosionButton" class="button button-danger" type="button" hidden>VÝBUCH</button>
       <button id="stopButton" class="button button-outline" type="button" disabled>ZASTAVIT</button>
+      <button id="manualExplosionButton" class="button button-danger" type="button" hidden>VÝBUCH</button>
     </section>
 
     <form id="settingsForm" class="card" novalidate>
@@ -61,18 +60,15 @@
           <input id="allowManualExplosion" name="allowManualExplosion" type="checkbox" role="switch">
         </label>
       </div>
-    </form>
 
-    <section class="card" aria-labelledby="testsTitle">
-      <h2 id="testsTitle" class="card-title">Test zvuků</h2>
-      <div class="test-actions">
+      <div class="tests" role="group" aria-label="Test zvuků">
+        <span>Test zvuku</span>
         <button id="testTickButton" class="button button-soft" type="button">Tikání</button>
         <button id="testExplosionButton" class="button button-soft" type="button">Výbuch</button>
       </div>
-    </section>
+    </form>
 
-    <section id="installCard" class="card install" aria-labelledby="installTitle" hidden>
-      <h2 id="installTitle" class="card-title">Uložit na plochu</h2>
+    <section id="installCard" class="install" aria-label="Uložit na plochu" hidden>
       <p id="installText"></p>
       <button id="installButton" class="button button-soft" type="button" hidden>Nainstalovat aplikaci</button>
     </section>

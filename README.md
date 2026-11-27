@@ -36,6 +36,7 @@
 |-- styles.css
 `-- assets
     |-- explosion.wav
+    |-- apple-touch-icon.png
     |-- icon-192.png
     |-- icon-512.png
     |-- icon.svg
@@ -57,7 +58,8 @@ Zvuky jsou generované lokálně skriptem `generate_audio.py` pouze pomocí Pyth
 
 - `tick.wav` je složený z krátkého vysokého úderu, středového těla, nízké rezonance a jemného filtrovaného šumu.
 - `explosion.wav` kombinuje nízkofrekvenční boom, střední vrstvu, krátký praskavý transient a filtrovaný šum s dozníváním.
-- Skript používá `wave`, `math`, `random`, `struct` a `zlib`.
+- Skript používá `wave`, `math`, `random` a `struct`.
+- Ikony (`assets/icon.svg` a z něj PNG) se negenerují skriptem, upravuj přímo SVG.
 - U obou WAV souborů jsou přidané krátké náběhy a doběhy, aby při přehrávání nelupaly.
 
 Zvuky znovu vygeneruješ příkazem:
