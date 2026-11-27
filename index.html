@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#201216">
+  <meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
   <meta name="description" content="Offline PWA pro dětskou táborovou hru s časovanou bombou.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
@@ -12,77 +13,68 @@
   <title>Bomba</title>
 </head>
 <body>
-  <main class="app-shell">
-    <section class="hero-card" aria-labelledby="app-title">
-      <div class="hero-top">
-        <div class="bomb-mark" aria-hidden="true">
-          <svg viewBox="0 0 128 128" role="presentation">
-            <circle cx="64" cy="74" r="34"></circle>
-            <path d="M75 37c4-8 11-14 20-18"></path>
-            <path d="M90 16c8 1 15 7 17 15"></path>
-            <path d="M98 29c5 0 10 2 14 6"></path>
-            <circle cx="52" cy="63" r="5" class="spark"></circle>
-          </svg>
-        </div>
-        <div>
-          <h1 id="app-title">Bomba</h1>
-        </div>
-      </div>
+  <main class="app">
+    <header class="app-header">
+      <svg class="logo" viewBox="0 0 128 128" aria-hidden="true">
+        <circle cx="60" cy="76" r="34"></circle>
+        <path d="M76 44l10-10"></path>
+        <path d="M92 28c6-6 14-6 20 0"></path>
+      </svg>
+      <h1>Bomba</h1>
+    </header>
 
-      <div class="status-card" aria-live="polite" aria-atomic="true">
-        <p class="status-label">Stav hry</p>
-        <p id="statusText" class="status-text">Připraveno</p>
-        <p id="errorText" class="error-text" hidden></p>
-      </div>
-
+    <section id="statusCard" class="card status" data-state="ready" aria-live="polite" aria-atomic="true">
+      <p class="status-label">Stav hry</p>
+      <p id="statusText" class="status-text">Připraveno</p>
       <p id="countdownText" class="countdown" hidden>Zbývá 0,0 s</p>
+      <p id="errorText" class="error-text" hidden></p>
+    </section>
 
-      <form id="settingsForm" class="panel" novalidate>
-        <fieldset class="settings-grid">
-          <legend>Nastavení kola</legend>
+    <section class="actions" aria-label="Ovládání hry">
+      <button id="startButton" class="button button-primary" type="button">START</button>
+      <button id="manualExplosionButton" class="button button-danger" type="button" hidden>VÝBUCH</button>
+      <button id="stopButton" class="button button-outline" type="button" disabled>ZASTAVIT</button>
+    </section>
 
-          <label class="field">
-            <span>Minimum (s)</span>
-            <input id="minSeconds" name="minSeconds" type="number" inputmode="decimal" min="0.1" max="3600" step="0.1" value="30" required>
-          </label>
-
-          <label class="field">
-            <span>Maximum (s)</span>
-            <input id="maxSeconds" name="maxSeconds" type="number" inputmode="decimal" min="0.1" max="3600" step="0.1" value="90" required>
-          </label>
-        </fieldset>
-
-        <div class="toggles">
-          <label class="toggle">
-            <input id="showCountdown" name="showCountdown" type="checkbox">
-            <span>Zobrazit zbývající čas</span>
-          </label>
-
-          <label class="toggle">
-            <input id="allowManualExplosion" name="allowManualExplosion" type="checkbox">
-            <span>Povolit tlačítko ručního výbuchu</span>
-          </label>
+    <form id="settingsForm" class="card" novalidate>
+      <fieldset class="range">
+        <legend class="card-title">Délka tikání</legend>
+        <div class="range-grid">
+        <label class="field">
+          <span>Minimum (s)</span>
+          <input id="minSeconds" name="minSeconds" type="number" inputmode="decimal" min="0.1" max="3600" step="0.1" value="30" required>
+        </label>
+        <label class="field">
+          <span>Maximum (s)</span>
+          <input id="maxSeconds" name="maxSeconds" type="number" inputmode="decimal" min="0.1" max="3600" step="0.1" value="90" required>
+        </label>
         </div>
-      </form>
+      </fieldset>
 
-      <section class="actions" aria-label="Ovládání hry">
-        <button id="startButton" class="button button-start" type="button">START</button>
-        <button id="manualExplosionButton" class="button button-explosion" type="button" hidden>VÝBUCH</button>
-        <button id="stopButton" class="button button-stop" type="button" disabled>ZASTAVIT</button>
-      </section>
+      <div class="switches">
+        <label class="switch">
+          <span>Zobrazit zbývající čas</span>
+          <input id="showCountdown" name="showCountdown" type="checkbox" role="switch">
+        </label>
+        <label class="switch">
+          <span>Tlačítko ručního výbuchu</span>
+          <input id="allowManualExplosion" name="allowManualExplosion" type="checkbox" role="switch">
+        </label>
+      </div>
+    </form>
 
-      <section class="panel tests" aria-label="Test zvuků">
-        <h2>Test zvuků</h2>
-        <div class="test-actions">
-          <button id="testTickButton" class="button button-secondary" type="button">Otestovat tikání</button>
-          <button id="testExplosionButton" class="button button-secondary" type="button">Otestovat výbuch</button>
-        </div>
-        <div class="install-help">
-          <h2>Uložení na plochu</h2>
-          <p>Android: v menu prohlížeče zvol <strong>Přidat na plochu</strong> nebo <strong>Instalovat aplikaci</strong>.</p>
-          <p>iPhone: v Safari klepni na <strong>Sdílet</strong> a potom na <strong>Přidat na plochu</strong>.</p>
-        </div>
-      </section>
+    <section class="card" aria-labelledby="testsTitle">
+      <h2 id="testsTitle" class="card-title">Test zvuků</h2>
+      <div class="test-actions">
+        <button id="testTickButton" class="button button-soft" type="button">Tikání</button>
+        <button id="testExplosionButton" class="button button-soft" type="button">Výbuch</button>
+      </div>
+    </section>
+
+    <section id="installCard" class="card install" aria-labelledby="installTitle" hidden>
+      <h2 id="installTitle" class="card-title">Uložit na plochu</h2>
+      <p id="installText"></p>
+      <button id="installButton" class="button button-soft" type="button" hidden>Nainstalovat aplikaci</button>
     </section>
   </main>
 
