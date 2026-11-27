@@ -1,0 +1,811 @@
+Vytvoř kompletní mobilní webovou aplikaci s názvem „Bomba“ pro dětskou táborovou hru.
+
+Cílem je nahradit Excel makro a umožnit spuštění hry na mobilním telefonu připojeném přes Bluetooth k reproduktoru.
+
+Aplikace simuluje časovanou bombu. Po spuštění náhodně zvolí délku intervalu mezi nastaveným minimem a maximem, během tohoto intervalu přehrává tikání a po jeho skončení přehraje zvuk výbuchu.
+
+## Základní technické požadavky
+
+Aplikace musí být:
+
+* zdarma provozovatelná,
+* kompatibilní s Androidem,
+* kompatibilní s iOS,
+* kompatibilní s běžnými desktopovými prohlížeči,
+* responzivní,
+* navržená primárně pro mobilní telefon na výšku,
+* použitelná offline po prvním načtení,
+* vytvořená jako jednoduchá PWA,
+* bez backendu,
+* bez databáze,
+* bez registrace uživatelů,
+* bez placených služeb,
+* spustitelná ze statického hostingu, například GitHub Pages,
+* vytvořená pouze pomocí HTML, CSS a čistého JavaScriptu,
+* bez frameworků,
+* bez externích CDN knihoven,
+* bez závislosti na internetovém připojení za běhu aplikace.
+
+Aplikace musí být po dokončení plně použitelná bez nutnosti ručně doplňovat zvuky nebo jiné multimediální soubory.
+
+## Hlavní ovládání
+
+Uživatel může nastavit:
+
+* minimální délku tikání v sekundách,
+* maximální délku tikání v sekundách.
+
+Výchozí hodnoty:
+
+* minimum: 30 sekund,
+* maximum: 90 sekund.
+
+Přidej velké a dobře viditelné tlačítko:
+
+„START“
+
+Po stisknutí tlačítka START aplikace:
+
+1. ověří platnost nastavení,
+2. náhodně zvolí délku intervalu mezi minimem a maximem,
+3. začne přehrávat zvuk tikání ve smyčce,
+4. spustí interní odpočet,
+5. po skončení náhodně zvoleného intervalu zastaví tikání,
+6. přehraje zvuk výbuchu,
+7. ukončí aktuální kolo,
+8. obnoví ovládací prvky pro spuštění dalšího kola.
+
+Náhodný interval nemusí být pouze celé číslo. Může obsahovat i desetinnou část sekundy, aby nebylo možné okamžik výbuchu snadno odhadnout.
+
+Použij rovnoměrné náhodné rozdělení mezi minimální a maximální hodnotou.
+
+## Zobrazení zbývajícího času
+
+Přidej checkbox s textem:
+
+„Zobrazit zbývající čas“
+
+Výchozí stav:
+
+* nezaškrtnuto.
+
+Pokud je checkbox nezaškrtnutý:
+
+* během hry se nesmí zobrazovat zbývající čas,
+* nesmí být zobrazen žádný postupový pruh ani jiný prvek, který by prozrazoval, kdy bomba vybuchne.
+
+Pokud je checkbox zaškrtnutý:
+
+* během tikání zobraz zbývající čas v sekundách,
+* zobrazuj jej s přesností na jedno desetinné místo,
+* hodnota nesmí být záporná,
+* po výbuchu zobrazování ukonči.
+
+Změna checkboxu se použije při následujícím spuštění kola.
+
+Během probíhajícího kola musí být checkbox deaktivovaný.
+
+## Ruční výbuch
+
+Přidej checkbox s textem:
+
+„Povolit tlačítko ručního výbuchu“
+
+Výchozí stav:
+
+* nezaškrtnuto.
+
+Pokud je checkbox zaškrtnutý, během probíhajícího odpočtu zobraz velké, výrazné a červené tlačítko:
+
+„VÝBUCH“
+
+Po kliknutí na tlačítko VÝBUCH aplikace okamžitě:
+
+1. ukončí odpočet,
+2. zruší automatický časovač,
+3. zastaví zvuk tikání,
+4. přehraje zvuk výbuchu,
+5. ukončí aktuální kolo,
+6. zabrání pozdějšímu automatickému spuštění druhého výbuchu.
+
+Tlačítko ručního výbuchu:
+
+* se nesmí zobrazovat před spuštěním kola,
+* se nesmí zobrazovat po skončení kola,
+* se zobrazí pouze během probíhajícího kola,
+* se zobrazí pouze v případě, že je příslušný checkbox zaškrtnutý,
+* po prvním kliknutí se musí okamžitě deaktivovat nebo skrýt,
+* nesmí umožnit vícenásobné spuštění zvuku výbuchu.
+
+Pokud checkbox zaškrtnutý není, tlačítko ručního výbuchu se během hry vůbec nezobrazuje.
+
+Během probíhajícího kola musí být checkbox deaktivovaný.
+
+## Tlačítko ZASTAVIT
+
+Přidej tlačítko:
+
+„ZASTAVIT“
+
+Tlačítko ZASTAVIT musí být aktivní pouze během probíhajícího kola.
+
+Po kliknutí:
+
+1. ukončí odpočet,
+2. zruší všechny aktivní časovače,
+3. zastaví tikání,
+4. nepřehraje zvuk výbuchu,
+5. ukončí animační smyčky,
+6. skryje tlačítko ručního výbuchu,
+7. vrátí aplikaci do připraveného stavu.
+
+Po zastavení zobraz stavový text:
+
+„Kolo zastaveno“
+
+Poté musí být možné znovu upravit nastavení a spustit nové kolo.
+
+## Test zvuků
+
+Přidej dvě samostatná tlačítka:
+
+* „Otestovat tikání“
+* „Otestovat výbuch“
+
+Tlačítko „Otestovat tikání“:
+
+* přehraje krátkou ukázku tikání,
+* po krátké době tikání automaticky zastaví,
+* nesmí spustit herní odpočet,
+* nesmí změnit stav hry.
+
+Tlačítko „Otestovat výbuch“:
+
+* jednou přehraje zvuk výbuchu,
+* nesmí spustit herní odpočet,
+* nesmí změnit stav hry.
+
+Testovací tlačítka deaktivuj během probíhajícího kola.
+
+Zajisti, aby se při opakovaném rychlém klikání nepřekrývalo více instancí stejného zvuku.
+
+## Stavy aplikace
+
+Použij jasně definované stavy aplikace, například:
+
+* připraveno,
+* probíhá tikání,
+* výbuch,
+* zastaveno,
+* chyba.
+
+Zobrazuj uživateli stavový text.
+
+Použij například tyto texty:
+
+* „Připraveno“
+* „Bomba tiká“
+* „Výbuch!“
+* „Kolo zastaveno“
+* „Chyba při přehrávání zvuku“
+
+Během probíhajícího kola:
+
+* deaktivuj tlačítko START,
+* deaktivuj pole minimum,
+* deaktivuj pole maximum,
+* deaktivuj oba konfigurační checkboxy,
+* deaktivuj testovací tlačítka,
+* aktivuj tlačítko ZASTAVIT,
+* případně zobraz tlačítko ručního výbuchu.
+
+Po skončení nebo zastavení kola:
+
+* znovu aktivuj START,
+* znovu aktivuj vstupní pole,
+* znovu aktivuj checkboxy,
+* znovu aktivuj testovací tlačítka,
+* deaktivuj ZASTAVIT,
+* skryj tlačítko ručního výbuchu.
+
+## Validace vstupů
+
+Ošetři následující chybové stavy:
+
+* prázdná hodnota minima,
+* prázdná hodnota maxima,
+* nečíselná hodnota,
+* hodnota nula,
+* záporná hodnota,
+* minimum větší než maximum,
+* extrémně vysoká hodnota,
+* opakované rychlé kliknutí na START.
+
+Použij rozumné horní omezení, například 3600 sekund.
+
+Povol desetinná čísla.
+
+Chybové zprávy zobraz přímo v rozhraní aplikace.
+
+Nepoužívej pouze `alert()`.
+
+Příklad chybové zprávy:
+
+„Minimální čas musí být kladné číslo a nesmí být větší než maximální čas.“
+
+Při neplatném nastavení nesmí dojít ke spuštění tikání ani časovače.
+
+## Přesnost odpočtu
+
+Nepoužívej pouze postupné odečítání hodnoty pomocí `setInterval`, protože při zpomalení prohlížeče může vznikat časová odchylka.
+
+Při spuštění kola:
+
+* zjisti aktuální čas pomocí `performance.now()`,
+* vypočítej přesný čas konce,
+* ulož čas konce do proměnné.
+
+Zobrazení zbývajícího času aktualizuj pomocí:
+
+* `requestAnimationFrame`,
+* nebo krátkého intervalu.
+
+O skutečném spuštění výbuchu rozhoduj podle porovnání aktuálního času s uloženým časem konce.
+
+Zajisti, aby:
+
+* automatický výbuch nastal pouze jednou,
+* ruční výbuch nastal pouze jednou,
+* zastavení těsně před automatickým výbuchem nezpůsobilo následné přehrání výbuchu,
+* starý časovač nemohl ovlivnit nové kolo,
+* po skončení kola nezůstala spuštěná žádná animační smyčka,
+* nemohlo dojít k souběhu dvou kol.
+
+Použij centrální příznak nebo stavovou proměnnou, například:
+
+* `isRunning`
+* `hasExploded`
+* identifikátor aktuálního kola.
+
+## Zvukové efekty
+
+Aplikace musí obsahovat dva lokální zvukové efekty:
+
+* tikání bomby,
+* výbuch.
+
+Preferované názvy souborů:
+
+* `assets/tick.wav`
+* `assets/explosion.wav`
+
+Případně můžeš použít MP3 nebo OGG, pokud to bude technicky vhodnější.
+
+Použité formáty musí být podporované moderními mobilními prohlížeči.
+
+Tikání:
+
+* musí být pravidelné,
+* musí být jasně slyšitelné,
+* musí být vhodné pro přehrávání ve smyčce,
+* nesmí obsahovat hlas, hudbu ani reklamu,
+* nesmí při opakování vytvářet dlouhou tichou mezeru,
+* nesmí při přechodu mezi smyčkami výrazně lupat,
+* musí být vhodné pro přehrávání přes Bluetooth reproduktor.
+
+Výbuch:
+
+* musí být krátký a výrazný,
+* měl by trvat přibližně 1 až 3 sekundy,
+* nesmí obsahovat hlas, hudbu ani reklamu,
+* neměl by obsahovat příliš dlouhé tiché doznívání,
+* musí být dobře slyšitelný přes Bluetooth reproduktor,
+* nesmí být extrémně hlasitý nebo zkreslený.
+
+Před spuštěním hry zvuky přednačti.
+
+Tikání přehrávej ve smyčce.
+
+Výbuch přehraj pouze jednou.
+
+Před výbuchem vždy korektně zastav tikání a vrať jeho pozici na začátek.
+
+Ošetři omezení mobilních prohlížečů, které dovolují přehrávání zvuku až po interakci uživatele.
+
+První interakcí může být kliknutí na START nebo testovací tlačítko.
+
+Pokud zvuk nelze načíst nebo přehrát:
+
+* nezpůsob pád aplikace,
+* zastav případný odpočet,
+* zobraz srozumitelnou chybovou zprávu,
+* umožni uživateli pokus opakovat.
+
+## Zajištění multimediálních souborů
+
+Nezanechávej zvukové soubory jako prázdné zástupné soubory.
+
+Sám zajisti nebo vytvoř vhodné zvukové efekty.
+
+Preferovaná varianta je vytvořit zvuky programově, aby aplikace neměla závislost na externích licencovaných souborech.
+
+Vytvoř skript:
+
+`generate_audio.py`
+
+Skript musí:
+
+* používat pouze Python standardní knihovnu, pokud je to možné,
+* fungovat bez internetového připojení,
+* nevyžadovat placené knihovny,
+* vygenerovat tikání,
+* vygenerovat zvuk výbuchu,
+* uložit soubory do složky `assets`,
+* vytvořit soubory v běžně podporovaném formátu, ideálně WAV,
+* používat například modul `wave`,
+* používat například modul `math`,
+* používat například modul `random`,
+* vytvořit zvuky v mono nebo stereo kvalitě vhodné pro mobil,
+* použít rozumnou vzorkovací frekvenci, například 44 100 Hz,
+* zabránit digitálnímu clippingu,
+* přidat krátké náběhy a doběhy amplitudy, aby zvuky nelupaly.
+
+Tikání může být vytvořeno jako krátký mechanický úder s krátkým dozvukem a tichem do dalšího úderu.
+
+Výbuch může být vytvořen jako kombinace:
+
+* nízkofrekvenčního úderu,
+* filtrovaného šumu,
+* rychlého nástupu,
+* postupného doznívání.
+
+Výsledek nemusí být studiový, ale musí být zřetelný, použitelný a vhodný pro danou hru.
+
+Skript skutečně spusť a ověř, že výsledné soubory existují a nejsou prázdné.
+
+Ověř alespoň:
+
+* velikost souborů,
+* délku zvuků,
+* správný formát WAV,
+* že aplikace odkazuje na správné cesty.
+
+Pokud prostředí umožňuje vytvořit zvukové soubory přímo, vytvoř je a zahrň je do projektu.
+
+Pokud programové vytvoření kvalitního zvuku není možné, můžeš použít zvuky z externího zdroje pouze za těchto podmínek:
+
+* zvuk musí mít licenci CC0 nebo obdobnou licenci umožňující bezplatné použití,
+* zvuk musí být možné používat bez placení,
+* zvuk stáhni přímo do složky `assets`,
+* aplikace nesmí za běhu používat vzdálené URL,
+* v README uveď autora,
+* v README uveď původní zdroj,
+* v README uveď přesnou licenci,
+* přidej případný požadovaný licenční soubor,
+* ověř, že licence umožňuje zamýšlené použití.
+
+Preferuj však vlastní programově vytvořené zvuky bez nutnosti atribuce.
+
+## Práce se zvukem v JavaScriptu
+
+Můžeš použít elementy `Audio`, Web Audio API nebo jejich kombinaci.
+
+Zvol řešení, které je stabilní na mobilních zařízeních.
+
+Zajisti:
+
+* přednačtení zvuků,
+* možnost opakování tikání,
+* okamžité zastavení tikání,
+* nastavení `currentTime` na začátek po zastavení,
+* zabránění překrývání více zvuků,
+* korektní práci po několika po sobě jdoucích kolech,
+* korektní práci při použití Bluetooth reproduktoru.
+
+Pokud použiješ Web Audio API:
+
+* inicializuj nebo obnov `AudioContext` po uživatelské interakci,
+* ošetři stav `suspended`.
+
+Pokud použiješ HTMLAudioElement:
+
+* ošetři Promise vrácenou funkcí `play()`.
+
+## Uživatelské rozhraní
+
+Navrhni rozhraní primárně pro mobilní telefon držený na výšku.
+
+Použij:
+
+* velké ovládací prvky,
+* dobře čitelné písmo,
+* dostatečné rozestupy,
+* vysoký kontrast,
+* dotykové plochy vhodné pro mobil,
+* výrazné tlačítko START,
+* výrazné červené tlačítko VÝBUCH,
+* přehlednou sekci nastavení,
+* viditelný stav hry.
+
+Rozhraní by mělo být dobře použitelné:
+
+* venku,
+* na slunci,
+* jednou rukou,
+* bez přesného klikání na malé prvky.
+
+Minimální velikost hlavních dotykových prvků by měla odpovídat přibližně 44 až 48 CSS pixelům.
+
+Použij české texty.
+
+Nepoužívej externí obrázky ani fonty.
+
+Můžeš použít jednoduchou ikonu bomby vytvořenou pomocí:
+
+* CSS,
+* inline SVG,
+* Unicode symbolu.
+
+Nepoužívej vzdáleně načítané ikony.
+
+## Vizuální animace
+
+Během tikání zobraz jednoduchou vizuální animaci.
+
+Může to být například:
+
+* pulzující kruh,
+* jemně se zvětšující ikona bomby,
+* střídající se záře.
+
+Animace:
+
+* nesmí prozrazovat zbývající čas,
+* nesmí postupně zrychlovat podle blížícího se výbuchu,
+* musí být stále stejně pravidelná,
+* musí se po skončení kola zastavit,
+* musí respektovat `prefers-reduced-motion`.
+
+Po výbuchu:
+
+* krátce zvýrazni obrazovku,
+* například zábleskem nebo otřesem rozhraní,
+* animace nesmí blokovat další ovládání déle než několik sekund.
+
+## Uložení nastavení
+
+Použij `localStorage`.
+
+Ukládej:
+
+* minimální čas,
+* maximální čas,
+* stav checkboxu „Zobrazit zbývající čas“,
+* stav checkboxu „Povolit tlačítko ručního výbuchu“.
+
+Po otevření aplikace obnov poslední použité nastavení.
+
+Pokud nastavení není dostupné nebo je poškozené, použij výchozí hodnoty.
+
+Výchozí hodnoty:
+
+* minimum 30,
+* maximum 90,
+* zobrazování zbývajícího času vypnuto,
+* ruční výbuch vypnutý.
+
+Ukládání nesmí způsobit chybu aplikace ani v režimu, kde je `localStorage` omezené.
+
+## Offline PWA
+
+Vytvoř alespoň tyto soubory:
+
+* `index.html`
+* `styles.css`
+* `app.js`
+* `manifest.webmanifest`
+* `service-worker.js`
+* `generate_audio.py`
+* `README.md`
+* `assets/tick.wav`
+* `assets/explosion.wav`
+* ikony aplikace.
+
+Preferovaná struktura:
+
+```text
+bomba/
+├── index.html
+├── styles.css
+├── app.js
+├── manifest.webmanifest
+├── service-worker.js
+├── generate_audio.py
+├── README.md
+└── assets/
+    ├── tick.wav
+    ├── explosion.wav
+    ├── icon-192.png
+    └── icon-512.png
+```
+
+Pokud je možné vytvořit ikony programově bez externích knihoven, vytvoř je.
+
+Pokud nelze jednoduše vytvořit PNG ikony bez dalších knihoven, můžeš:
+
+* vytvořit jednoduché SVG ikony,
+* případně přidat skript pro jejich generování,
+* zajistit platné odkazy v manifestu.
+
+Aplikace musí fungovat i v případě, že instalace PWA není na konkrétní platformě dostupná.
+
+## Manifest
+
+V souboru `manifest.webmanifest` nastav vhodné hodnoty, například:
+
+* název: „Bomba“
+* krátký název: „Bomba“
+* `display`: `standalone`
+* vhodnou barvu pozadí,
+* vhodnou barvu motivu,
+* orientaci primárně na výšku,
+* startovací URL vhodnou pro GitHub Pages,
+* ikony.
+
+Dbej na to, aby cesty fungovaly při nasazení v podadresáři GitHub Pages.
+
+Nepoužívej absolutní cesty začínající `/`, pokud by mohly rozbít nasazení v projektovém repozitáři.
+
+## Service worker
+
+Service worker musí uložit do cache všechny soubory potřebné pro offline provoz:
+
+* HTML,
+* CSS,
+* JavaScript,
+* manifest,
+* zvuky,
+* ikony.
+
+Po prvním úspěšném načtení musí aplikace fungovat v režimu letadlo.
+
+Použij verzování cache.
+
+Při aktualizaci service workeru:
+
+* odstraň staré cache,
+* neponechávej zbytečně zastaralé soubory.
+
+Zvol vhodnou strategii pro statickou aplikaci, například cache-first s bezpečným fallbackem.
+
+Ošetři situaci, kdy některý soubor při instalaci cache chybí.
+
+Zajisti, aby chyba service workeru nezabránila základnímu online spuštění aplikace.
+
+Registraci service workeru proveď pouze na podporovaných protokolech, tedy typicky HTTPS nebo localhost.
+
+## Zabránění zhasnutí obrazovky
+
+Pokud prohlížeč podporuje Screen Wake Lock API, pokus se během probíhajícího kola zabránit zhasnutí obrazovky.
+
+Použij například:
+
+`navigator.wakeLock.request("screen")`
+
+Wake lock:
+
+* aktivuj po spuštění kola,
+* uvolni po výbuchu,
+* uvolni po ručním zastavení,
+* ošetři chybu nebo nepodporovaný prohlížeč,
+* nezobrazuj chybu, pokud wake lock není dostupný,
+* po návratu aplikace do popředí jej případně obnov.
+
+Aplikace musí fungovat i bez této funkce.
+
+## Přechod aplikace na pozadí
+
+Mobilní prohlížeče mohou omezit časovače a zvuk, když aplikace přejde na pozadí nebo se zamkne obrazovka.
+
+Ošetři událost `visibilitychange`.
+
+Při návratu do popředí:
+
+* zkontroluj aktuální čas,
+* pokud již měl nastat výbuch a kolo stále běží, okamžitě spusť výbuch,
+* nezakládej nový interval od začátku.
+
+Do README jasně napiš, že pro nejspolehlivější použití má uživatel:
+
+* nechat aplikaci otevřenou v popředí,
+* nevypínat displej,
+* vypnout úsporný režim telefonu,
+* před hrou otestovat propojení s Bluetooth reproduktorem.
+
+## Přístupnost
+
+Použij:
+
+* správné HTML labely,
+* čitelné kontrasty,
+* viditelný focus,
+* `aria-live` pro stavové zprávy,
+* vhodné `aria-label` tam, kde je to potřeba,
+* sémantické HTML prvky.
+
+Rozhraní musí být ovladatelné i klávesnicí na desktopu.
+
+Použij `type="number"` a vhodný `inputmode` pro mobilní zadávání čísel.
+
+## Architektura JavaScriptu
+
+Kód rozděl do přehledných funkcí.
+
+Použij například:
+
+* `initializeApp()`
+* `startGame()`
+* `stopGame()`
+* `triggerExplosion()`
+* `finishGame()`
+* `updateCountdown()`
+* `validateSettings()`
+* `loadSettings()`
+* `saveSettings()`
+* `setGameState()`
+* `startTicking()`
+* `stopTicking()`
+* `playExplosion()`
+* `cancelActiveTimers()`
+* `requestWakeLock()`
+* `releaseWakeLock()`
+
+Použij jasné názvy proměnných.
+
+Omez množství globálních proměnných.
+
+Můžeš použít uzavřený modul nebo třídu, pokud to zvýší přehlednost.
+
+Komentáře používej pouze tam, kde vysvětlují důležité nebo méně zřejmé chování.
+
+Nevytvářej zbytečně složitou architekturu.
+
+## Bezpečnost a stabilita
+
+Nepoužívej:
+
+* `eval`,
+* inline JavaScript v HTML atributech,
+* externí skripty,
+* sledovací kód,
+* analytiku,
+* cookies,
+* formuláře odesílané na server.
+
+Zajisti, aby opakované rychlé klikání nezpůsobilo:
+
+* více souběžných časovačů,
+* více přehrávaných tikání,
+* více výbuchů,
+* poškození stavu aplikace.
+
+Před spuštěním nového kola vždy vyčisti případné zbytky předchozího kola.
+
+## README
+
+Vytvoř kvalitní soubor `README.md` v češtině.
+
+Popiš v něm:
+
+* účel aplikace,
+* pravidla hry v základní podobě,
+* hlavní funkce,
+* strukturu souborů,
+* technické řešení,
+* jak byly vytvořeny zvuky,
+* jak znovu spustit `generate_audio.py`,
+* požadavky na Python,
+* jak aplikaci spustit lokálně,
+* proč ji není vhodné otevírat pouze dvojklikem přes `file://`,
+* jak spustit jednoduchý lokální HTTP server,
+* jak aplikaci nasadit zdarma na GitHub Pages,
+* jak ji přidat na plochu Androidu,
+* jak ji přidat na plochu iPhonu,
+* jak otestovat offline režim,
+* jak otestovat zvuk přes Bluetooth reproduktor,
+* známá omezení mobilních prohlížečů,
+* doporučení nevypínat obrazovku a nepřepínat aplikaci na pozadí.
+
+Pro lokální server uveď například:
+
+```bash
+python -m http.server 8000
+```
+
+A následné otevření:
+
+```text
+http://localhost:8000
+```
+
+U GitHub Pages popiš celý postup:
+
+1. vytvoření repozitáře,
+2. nahrání souborů,
+3. zapnutí Pages,
+4. výběr větve,
+5. otevření výsledné adresy,
+6. první načtení aplikace,
+7. instalaci na plochu,
+8. test v režimu letadlo.
+
+## Testování
+
+Aplikaci skutečně otestuj.
+
+Proveď alespoň tyto kontroly:
+
+1. Výchozí hodnoty jsou 30 a 90 sekund.
+2. Oba checkboxy jsou ve výchozím stavu vypnuté.
+3. START spustí tikání.
+4. Délka kola je náhodná.
+5. Po skončení intervalu se tikání zastaví.
+6. Výbuch se přehraje pouze jednou.
+7. Bez aktivního checkboxu se čas nezobrazuje.
+8. S aktivním checkboxem se čas zobrazuje.
+9. Bez aktivního checkboxu ručního výbuchu se tlačítko VÝBUCH nezobrazí.
+10. S aktivním checkboxem se tlačítko VÝBUCH zobrazí pouze během kola.
+11. Ruční výbuch zastaví tikání a zruší automatický výbuch.
+12. ZASTAVIT ukončí kolo bez výbuchu.
+13. Druhé kolo lze spustit bez obnovení stránky.
+14. Rychlé opakované kliknutí na START nespustí více kol.
+15. Rychlé opakované kliknutí na VÝBUCH nepřehraje více výbuchů.
+16. Neplatné hodnoty zobrazí chybu.
+17. Nastavení se uloží do `localStorage`.
+18. Nastavení se obnoví po načtení stránky.
+19. Zvuky existují a nejsou prázdné.
+20. Service worker uloží aplikaci do cache.
+21. Aplikace funguje offline po prvním načtení.
+22. Cesty fungují při nasazení na GitHub Pages v podadresáři.
+23. Aplikace je použitelná na úzkém mobilním displeji.
+24. Tlačítka mají dostatečně velkou dotykovou plochu.
+25. Po návratu aplikace z pozadí se čas správně vyhodnotí.
+
+Pokud je v prostředí dostupný automatizovaný prohlížečový testovací nástroj, vytvoř a spusť základní testy.
+
+Pokud není dostupný, proveď alespoň statickou kontrolu kódu a popiš, co musí být ověřeno ručně na telefonu.
+
+## Výsledný výstup
+
+Nevypisuj pouze ukázky nebo fragmenty.
+
+Vytvoř celý funkční projekt.
+
+Proveď následující kroky:
+
+1. vytvoř všechny požadované soubory,
+2. vytvoř skript pro generování zvuků,
+3. spusť skript,
+4. vygeneruj skutečné zvukové soubory,
+5. ověř jejich existenci a velikost,
+6. zkontroluj odkazy mezi soubory,
+7. otestuj hlavní logiku aplikace,
+8. vytvoř ZIP archiv celého projektu.
+
+Výsledný ZIP pojmenuj například:
+
+`bomba-pwa.zip`
+
+Na závěr odpovědi:
+
+1. zobraz strom výsledné složky,
+2. stručně vysvětli architekturu,
+3. uveď, jak byly vytvořeny zvuky,
+4. uveď výslednou délku a velikost zvukových souborů,
+5. popiš lokální spuštění,
+6. popiš nasazení na GitHub Pages,
+7. uveď kontrolní seznam pro test na mobilním telefonu,
+8. uveď kontrolní seznam pro test s Bluetooth reproduktorem,
+9. poskytni cestu nebo odkaz ke stažení výsledného ZIP archivu.
+
+Neukončuj práci pouze doporučením, co má uživatel udělat. Projekt skutečně vytvoř, doplň zvuky, otestuj a zabal do ZIP archivu.
