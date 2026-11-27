@@ -1,7 +1,6 @@
-const CACHE_VERSION = "bomba-v1";
+const CACHE_VERSION = "bomba-v2";
 const APP_SHELL = [
   "./",
-  "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
@@ -62,7 +61,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_VERSION).then((cache) => cache.put(event.request, clonedResponse));
           return networkResponse;
         })
-        .catch(() => caches.match("./index.html"));
+        .catch(() => caches.match("./"));
     })
   );
 });

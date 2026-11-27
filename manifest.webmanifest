@@ -2,7 +2,7 @@
   "name": "Bomba",
   "short_name": "Bomba",
   "description": "Offline PWA pro dětskou táborovou hru s časovanou bombou.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",

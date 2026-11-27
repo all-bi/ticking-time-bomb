@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bomba",
+  "compatibility_date": "2026-11-01",
+  // Čistě statická PWA – žádný Worker skript, jen statické soubory z kořene repozitáře.
+  "assets": {
+    "directory": "./"
+  },
+  "routes": [
+    { "pattern": "bomba.albiovi.cz", "custom_domain": true }
+  ],
+  "workers_dev": true
+}

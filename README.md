@@ -102,6 +102,25 @@ http://localhost:8000
 7. Aplikaci načti alespoň jednou online.
 8. Přidej ji na plochu a otestuj režim letadlo.
 
+## Nasazení na Cloudflare (bomba.albiovi.cz)
+
+Repozitář obsahuje `wrangler.jsonc` pro Cloudflare Workers se statickými assety (bez serverového kódu):
+
+- `wrangler.jsonc` – název `bomba`, assety z kořene repozitáře, vlastní doména `bomba.albiovi.cz`.
+- `.assetsignore` – nepublikuje `.git`, ZIP, `*.md`, `*.txt`, `*.py` ani konfiguraci.
+- `_headers` – `service-worker.js` se necachuje, aby se aktualizace projevily hned.
+
+Postup (jednorázově v Cloudflare dashboardu):
+
+1. `Workers & Pages` → `Create` → `Import a repository` → vyber tento GitHub repozitář.
+2. Build command nech prázdný, deploy command `npx wrangler deploy` (výchozí).
+3. Po prvním nasazení Cloudflare sám vytvoří DNS záznam a certifikát pro `bomba.albiovi.cz`
+   (zóna `albiovi.cz` musí být ve stejném Cloudflare účtu). Každý push do produkční větve pak nasadí novou verzi.
+
+Alternativně z počítače: `npx wrangler login` a `npx wrangler deploy`.
+
+Při každé změně aplikace zvyš `CACHE_VERSION` v `service-worker.js`.
+
 ## Přidání na plochu
 
 ### Android
