@@ -1,4 +1,4 @@
-const CACHE_VERSION = "bomba-v4";
+const CACHE_VERSION = "bomba-v5";
 const APP_SHELL = [
   "./",
   "./styles.css",

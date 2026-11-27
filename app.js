@@ -466,7 +466,6 @@
     elements.testExplosionButton.disabled = running;
 
     const showManualButton = elements.allowManualExplosion.checked;
-    elements.manualExplosionButton.hidden = !showManualButton;
     elements.manualExplosionButton.disabled = !showManualButton;
   }
 
