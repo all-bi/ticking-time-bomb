@@ -95,8 +95,14 @@ h1 {
 
 /* Stav */
 .status {
+  /* Pevná výška, aby se při zobrazení odpočtu nic neposouvalo. */
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 18px 14px;
+  padding: 12px 14px;
   transition: background-color 200ms ease, border-color 200ms ease;
 }
 .status p { margin: 0; }
@@ -115,13 +121,15 @@ h1 {
 .status[data-state="error"] .status-text { color: var(--danger); }
 
 .status .countdown {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 2.2rem;
+  line-height: 1.15;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .status .error-text {
-  margin-top: 6px;
+  margin-top: 4px;
+  font-size: 0.9rem;
   color: var(--danger);
   font-weight: 600;
 }
@@ -129,10 +137,8 @@ h1 {
 /* Tlačítka */
 .actions {
   display: grid;
-  grid-template-columns: 2fr 1fr;
   gap: 10px;
 }
-.actions .button-danger { grid-column: 1 / -1; }
 
 .button {
   width: 100%;

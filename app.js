@@ -195,7 +195,7 @@
     const validation = validateSettings();
     if (!validation.valid) {
       showError(validation.message);
-      setGameState("error", validation.message);
+      setGameState("error", "Chyba nastavení");
       return;
     }
 
@@ -457,6 +457,8 @@
   function updateControls() {
     const running = state.isRunning;
     elements.startButton.disabled = running;
+    elements.startButton.hidden = running;
+    elements.stopButton.hidden = !running;
     elements.minSeconds.disabled = running;
     elements.maxSeconds.disabled = running;
     elements.showCountdown.disabled = running;
