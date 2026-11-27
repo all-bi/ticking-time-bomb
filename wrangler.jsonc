@@ -9,5 +9,7 @@
   "routes": [
     { "pattern": "bomba.albiovi.cz", "custom_domain": true }
   ],
-  "workers_dev": true
+  "workers_dev": true,
+  // Náhledová sestavení pro jiné větve než main (Workers Builds spouští `wrangler preview`).
+  "previews": {}
 }
