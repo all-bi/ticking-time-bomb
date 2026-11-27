@@ -92,6 +92,27 @@
 
     explosionAudio = new Audio("./assets/explosion.wav");
     explosionAudio.preload = "auto";
+
+    setupMediaSession();
+  }
+
+  // Název a obrázek, které telefon ukáže na zamčené obrazovce / v ovládacím centru.
+  function setupMediaSession() {
+    if (!("mediaSession" in navigator) || typeof window.MediaMetadata !== "function") {
+      return;
+    }
+    try {
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: "Bomba",
+        artist: "Táborová hra",
+        artwork: [
+          { src: "./assets/icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "./assets/icon-512.png", sizes: "512x512", type: "image/png" },
+        ],
+      });
+    } catch (_error) {
+      // Metadata jsou jen kosmetika, chyba nesmí ovlivnit hru.
+    }
   }
 
   function loadSettings() {

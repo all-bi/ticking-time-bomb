@@ -3,7 +3,6 @@ import os
 import random
 import struct
 import wave
-import zlib
 
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
 SAMPLE_RATE = 44100
@@ -154,102 +153,16 @@ def generate_explosion():
     return normalize(wave_samples, peak=0.97)
 
 
-def png_chunk(chunk_type, payload):
-    return (
-        struct.pack(">I", len(payload))
-        + chunk_type
-        + payload
-        + struct.pack(">I", zlib.crc32(chunk_type + payload) & 0xFFFFFFFF)
-    )
-
-
-def write_png(path, size):
-    pixels = bytearray()
-    for y in range(size):
-        pixels.append(0)
-        for x in range(size):
-            dx = (x - size / 2) / (size / 2)
-            dy = (y - size * 0.58) / (size / 2)
-            distance = math.sqrt(dx * dx + dy * dy)
-
-            r = 255
-            g = 205
-            b = 120
-            a = 255
-
-            if distance < 0.42:
-                shade = max(0.0, min(1.0, 1.0 - distance / 0.42))
-                r = int(18 + 52 * shade)
-                g = int(20 + 56 * shade)
-                b = int(25 + 68 * shade)
-            elif distance < 0.6:
-                shade = max(0.0, min(1.0, 1.0 - (distance - 0.42) / 0.18))
-                r = int(205 + 46 * shade)
-                g = int(129 + 68 * shade)
-                b = int(61 + 28 * shade)
-            else:
-                a = 0
-
-            fuse = y < int(size * 0.28) and abs(x - int(size * 0.68)) < int(size * 0.04)
-            fuse = fuse or (
-                y < int(size * 0.34)
-                and abs((x - int(size * 0.68)) + (y - size * 0.28) * 0.55) < int(size * 0.03)
-            )
-            spark = (x - int(size * 0.82)) ** 2 + (y - int(size * 0.18)) ** 2 < int(size * 0.04) ** 2
-
-            if fuse:
-                r, g, b, a = 222, 225, 231, 255
-            if spark:
-                r, g, b, a = 255, 207, 102, 255
-
-            pixels.extend((r, g, b, a))
-
-    png = bytearray(b"\x89PNG\r\n\x1a\n")
-    png.extend(png_chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)))
-    png.extend(png_chunk(b"IDAT", zlib.compress(bytes(pixels), level=9)))
-    png.extend(png_chunk(b"IEND", b""))
-
-    with open(path, "wb") as png_file:
-        png_file.write(png)
-
-
-def write_svg_icon(path):
-    svg = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Bomba">
-  <defs>
-    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#ffd166"/>
-      <stop offset="100%" stop-color="#e58f3d"/>
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
-  <circle cx="64" cy="76" r="34" fill="#1e1518"/>
-  <circle cx="51" cy="65" r="6" fill="#9da5b1" opacity="0.9"/>
-  <path d="M74 39c5-9 12-15 21-19" stroke="#1e1518" stroke-width="6" fill="none" stroke-linecap="round"/>
-  <path d="M91 18c8 1 15 7 17 15" stroke="#1e1518" stroke-width="6" fill="none" stroke-linecap="round"/>
-  <path d="M98 31c5 0 10 2 14 6" stroke="#1e1518" stroke-width="6" fill="none" stroke-linecap="round"/>
-  <circle cx="103" cy="24" r="8" fill="#ffd166"/>
-</svg>
-"""
-    with open(path, "w", encoding="utf-8") as svg_file:
-        svg_file.write(svg)
-
-
 def main():
     ensure_assets_dir()
     tick_path = os.path.join(ASSETS_DIR, "tick.wav")
     explosion_path = os.path.join(ASSETS_DIR, "explosion.wav")
-    icon_192_path = os.path.join(ASSETS_DIR, "icon-192.png")
-    icon_512_path = os.path.join(ASSETS_DIR, "icon-512.png")
-    icon_svg_path = os.path.join(ASSETS_DIR, "icon.svg")
 
     write_wav(tick_path, generate_tick())
     write_wav(explosion_path, generate_explosion())
-    write_png(icon_192_path, 192)
-    write_png(icon_512_path, 512)
-    write_svg_icon(icon_svg_path)
 
     print("Vygenerováno:")
-    for output_path in (tick_path, explosion_path, icon_192_path, icon_512_path, icon_svg_path):
+    for output_path in (tick_path, explosion_path):
         print(f"- {output_path} ({os.path.getsize(output_path)} B)")
 
 

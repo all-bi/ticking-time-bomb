@@ -62,11 +62,12 @@ body {
   height: 26px;
   fill: var(--text);
   stroke: var(--accent);
-  stroke-width: 8;
+  stroke-width: 28;
   stroke-linecap: round;
 }
 .logo path { fill: none; }
 .logo circle { stroke: none; }
+.logo .spark { fill: #ffc94d; }
 
 h1 {
   margin: 0;
