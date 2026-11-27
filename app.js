@@ -41,6 +41,7 @@
     updateControls();
     updateCountdown();
     registerServiceWorker();
+    setupInstallHelp();
   }
 
   function cacheElements() {
@@ -49,6 +50,7 @@
     elements.maxSeconds = document.getElementById("maxSeconds");
     elements.showCountdown = document.getElementById("showCountdown");
     elements.allowManualExplosion = document.getElementById("allowManualExplosion");
+    elements.statusCard = document.getElementById("statusCard");
     elements.statusText = document.getElementById("statusText");
     elements.errorText = document.getElementById("errorText");
     elements.countdownText = document.getElementById("countdownText");
@@ -400,6 +402,7 @@
   function setGameState(nextState, statusMessage) {
     state.gameState = nextState;
     elements.statusText.textContent = statusMessage;
+    elements.statusCard.dataset.state = nextState;
   }
 
   function latchExplosionStatus() {
@@ -553,6 +556,66 @@
       return min;
     }
     return min + Math.random() * (max - min);
+  }
+
+  function detectPlatform() {
+    const ua = navigator.userAgent || "";
+    const isIPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+    if (/iPhone|iPad|iPod/i.test(ua) || isIPadOS) {
+      return "ios";
+    }
+    if (/Android/i.test(ua)) {
+      return "android";
+    }
+    return "desktop";
+  }
+
+  function isInstalled() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function setupInstallHelp() {
+    const card = document.getElementById("installCard");
+    const text = document.getElementById("installText");
+    const button = document.getElementById("installButton");
+    if (!card || !text || !button || isInstalled()) {
+      return;
+    }
+
+    const platform = detectPlatform();
+    if (platform === "ios") {
+      const isSafari = !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(navigator.userAgent);
+      text.innerHTML = isSafari
+        ? "Klepni dole na <strong>Sdílet</strong> a zvol <strong>Přidat na plochu</strong>."
+        : "Otevři tuto stránku v <strong>Safari</strong>, klepni na <strong>Sdílet</strong> a zvol <strong>Přidat na plochu</strong>.";
+    } else if (platform === "android") {
+      text.innerHTML = "V menu prohlížeče <strong>⋮</strong> zvol <strong>Přidat na plochu</strong> nebo <strong>Instalovat aplikaci</strong>.";
+    } else {
+      text.innerHTML = "Otevři stránku v telefonu a ulož si ji na plochu. V Chrome nebo Edge ji lze nainstalovat i v počítači ikonou v adresním řádku.";
+    }
+    card.hidden = false;
+
+    let deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      button.hidden = false;
+    });
+    button.addEventListener("click", async () => {
+      if (!deferredPrompt) {
+        return;
+      }
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice.catch(() => null);
+      deferredPrompt = null;
+      button.hidden = true;
+    });
+    window.addEventListener("appinstalled", () => {
+      card.hidden = true;
+    });
   }
 
   function registerServiceWorker() {
