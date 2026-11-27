@@ -1,0 +1,10 @@
+# Soubory, které se NEMAJÍ veřejně publikovat (repo slouží zároveň jako složka s assety).
+.git
+.github
+.assetsignore
+wrangler.jsonc
+node_modules
+*.zip
+*.md
+*.txt
+*.py
